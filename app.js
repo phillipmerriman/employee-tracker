@@ -42,7 +42,7 @@ function loadMainPrompts () {
     ]).then((response) => {
         
         switch (response.firstQuestion) {
-            
+
             case 'View all employess':
                 viewAllEmployees();
                 break;
@@ -101,4 +101,20 @@ function viewAllDepartments () {
 
 function exit () {
     connection.end();
+}
+
+function addEmployee () {
+    // CREATE
+}
+
+function addRole () {
+    // CREATE
+}
+
+function addDepartment () {
+    // CREATE
+}
+
+function updateEmployeeRole () {
+    // UPDATE
 }
