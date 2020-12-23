@@ -8,11 +8,11 @@ INSERT INTO department (name) VALUES ("Marketing"); -- department_id = 4
 INSERT INTO role (title, salary, department_id) VALUES ("Sales Manager", 100000, 1);
 INSERT INTO role (title, salary, department_id) VALUES ("Sales Associate", 70000, 1);
 INSERT INTO role (title, salary, department_id) VALUES ("IT Manager", 70000, 2);
-INSERT INTO role (title, salary, department_id) VALUES ("IT Associate", 70000, 2);
-INSERT INTO role (title, salary, department_id) VALUES ("Senior Engineer", 70000, 3);
-INSERT INTO role (title, salary, department_id) VALUES ("Junior Engineer", 70000, 3);
-INSERT INTO role (title, salary, department_id) VALUES ("Project Manager", 70000, 4);
-INSERT INTO role (title, salary, department_id) VALUES ("SEO Specialist", 70000, 4);
+INSERT INTO role (title, salary, department_id) VALUES ("IT Associate", 60000, 2);
+INSERT INTO role (title, salary, department_id) VALUES ("Senior Engineer", 180000, 3);
+INSERT INTO role (title, salary, department_id) VALUES ("Junior Engineer", 90000, 3);
+INSERT INTO role (title, salary, department_id) VALUES ("Project Manager", 75000, 4);
+INSERT INTO role (title, salary, department_id) VALUES ("SEO Specialist", 65000, 4);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("Sally", "Boss", 1, null);
 INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("Garth", "Bro", 2, 1);
