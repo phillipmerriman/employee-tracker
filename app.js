@@ -40,18 +40,19 @@ function loadMainPrompts () {
             ]
         }
     ]).then((response) => {
-        console.log(response.firstQuestion);
+        
         switch (response.firstQuestion) {
+            
             case 'View all employess':
                 viewAllEmployees();
                 break;
 
             case 'Add employee':
-                viewAllEmployees();
+                addEmployee();
                 break;
 
             case 'Update employee role':
-                viewAllEmployees();
+                updateEmployeeRole();
                 break;
 
             case 'View all roles':
@@ -59,7 +60,7 @@ function loadMainPrompts () {
                 break;
 
             case 'Add role':
-                viewAllEmployees();
+                addRole();
                 break;
 
             case 'View all departments':
@@ -67,7 +68,7 @@ function loadMainPrompts () {
                 break;
 
             case 'Add department':
-                viewAllEmployees();
+                addDepartment();
                 break;
 
             case 'Exit':
