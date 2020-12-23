@@ -45,23 +45,33 @@ function loadMainPrompts () {
             case 'View all employess':
                 viewAllEmployees();
                 break;
+
             case 'Add employee':
                 viewAllEmployees();
                 break;
+
             case 'Update employee role':
                 viewAllEmployees();
                 break;
+
             case 'View all roles':
                 viewAllRoles();
                 break;
+
             case 'Add role':
                 viewAllEmployees();
                 break;
+
             case 'View all departments':
                 viewAllDepartments();
                 break;
+
             case 'Add department':
                 viewAllEmployees();
+                break;
+
+            case 'Exit':
+                exit();
                 break;
         }
     });
@@ -86,4 +96,8 @@ function viewAllDepartments () {
         if (err) throw err;
         console.table(res);
     });
+}
+
+function exit () {
+    connection.end();
 }
