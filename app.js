@@ -2,7 +2,9 @@ const inquirer = require('inquirer');
 const mysql = require('mysql');
 const cTable = require('console.table');
 const logo = require('asciiart-logo');
-// const db = require("../db");
+const db = require('./db/connections');
+
+// console.log(db);
 
 init();
 
