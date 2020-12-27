@@ -5,24 +5,33 @@ const logo = require('asciiart-logo');
 const db = require('./db/connections');
 const connection = require('./db/connections');
 
+let mgrs = [];
+let roles = [];
+let departments = [];
+
 // console.log(db);
 
 init();
 
 function init () {
+    
     const logoText = logo({ name: "Employee Manager" }).render();
     console.log(logoText);
+    
     loadMainPrompts();
 }
 
 function loadMainPrompts () {
+    mgrArray();
+    rolesArray();
+    deptArray();
     inquirer.prompt([
         {
             type: 'list',
             name: 'firstQuestion',
             message: 'What would you like to do?',
             choices: [
-                'View all employess',
+                'View all employees',
                 'View all managers',
                 // 'View all employees by department',
                 // 'View all employees by manager',
@@ -44,15 +53,16 @@ function loadMainPrompts () {
         
         switch (response.firstQuestion) {
 
-            case 'View all employess':
+            case 'View all employees':
                 viewAllEmployees();
                 break;
 
             case 'View all managers':
-                mgrArray();
+                viewAllManagers();
                 break;
             
             case 'Add employee':
+                
                 addEmployee();
                 break;
 
@@ -80,6 +90,7 @@ function loadMainPrompts () {
                 exit();
                 break;
         }
+        
     });
 }
 
@@ -88,6 +99,16 @@ function loadMainPrompts () {
 function viewAllEmployees () {
     connection.query("SELECT * FROM employee", (err, res) => {
         if (err) throw err;
+        console.table(res);
+        loadMainPrompts();
+    });
+}
+
+function viewAllManagers () {
+
+    connection.query("SELECT first_name, last_name, role_id FROM employee WHERE manager_id IS null", (err, res) => {
+        if(err) throw err;
+        
         console.table(res);
         loadMainPrompts();
     });
@@ -115,7 +136,6 @@ function viewAllDepartments () {
 //----CREATE section----//
 
 function addEmployee () {
-    // mgrArray();
     inquirer.prompt([
         {
             type: "input",
@@ -131,16 +151,17 @@ function addEmployee () {
             type: "list",
             message: "What is the employee's role?",
             name: "role",
-            choices: [
-                "Sales Manager",
-                "Sales Associate",
-                "IT Manager",
-                "IT Associate",
-                "Senior Engineer",
-                "Junior Engineer",
-                "Project Manager",
-                "SEO Specialist"
-            ]
+            choices: roles,
+            // choices: [
+            //     "Sales Manager",
+            //     "Sales Associate",
+            //     "IT Manager",
+            //     "IT Associate",
+            //     "Senior Engineer",
+            //     "Junior Engineer",
+            //     "Project Manager",
+            //     "SEO Specialist"
+            // ]
         },
         {
             type: "list",
@@ -150,7 +171,10 @@ function addEmployee () {
         }
     ]).then((response) => {
         // CREATE
-    connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id)");
+    connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${response.firstName}', '${response.lastName}', '${response.role.slice(0, 1)}', '${response.manager.slice(0, 1)}')`, (err, res) => {
+        if (err) throw err;
+        console.log(`Added ${response.firstName} ${response.lastName} to the database!`);
+    });
     });    
 }
 
@@ -183,18 +207,34 @@ function exit () {
 }
 
 //----make manager array----//
-const mgrs = [];
 function mgrArray () {
+
     connection.query("SELECT * FROM employee WHERE manager_id IS null", (err, res) => {
         if(err) throw err;
-       
+        mgrs = [];
         for (let i = 0; i < res.length; i++) {
-            mgrs.push(res[i]);
-            console.log(res[i]);
-            console.log(mgrs);
+            mgrs.push(res[i].id + ' ' + res[i].first_name);
         }
-        console.table(mgrs);
-        loadMainPrompts();
-        // return mgrs;
+    });
+}
+
+function rolesArray () {
+    connection.query("SELECT * FROM role", (err, res) => {
+        if (err) throw err;
+        roles = [];
+        for (let i = 0; i < res.length; i++) {
+            roles.push(res[i].id + ' ' + res[i].title);
+        }
+    });
+}
+
+function deptArray () {
+
+    connection.query("SELECT * FROM department", (err, res) => {
+        if(err) throw err;
+        departments = [];
+        for (let i = 0; i < res.length; i++) {
+            departments.push(res[i].name);
+        }
     });
 }
