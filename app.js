@@ -173,13 +173,38 @@ function addEmployee () {
         // CREATE
     connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${response.firstName}', '${response.lastName}', '${response.role.slice(0, 1)}', '${response.manager.slice(0, 1)}')`, (err, res) => {
         if (err) throw err;
-        console.log(`Added ${response.firstName} ${response.lastName} to the database!`);
+        console.log(`----------------------------\nAdded ${response.firstName} ${response.lastName} to the database!\n----------------------------`);
+        loadMainPrompts();
     });
     });    
 }
 
 function addRole () {
-    // CREATE
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'What is the new role?',
+            name: 'newRole'
+        },
+        {
+            type: 'input',
+            message: 'What is the base salary of the new role?',
+            name: 'salary'
+        },
+        {
+            type: 'list',
+            message: 'Please assign a department id number:',
+            name: 'deptId',
+            choices: departments
+        }
+    ]).then((response) => {
+        // CREATE
+        connection.query(`INSERT INTO role (title, salary, department_id) VALUES ('${response.newRole}', ${response.salary}, '${response.deptId.slice(0, 1)}')`, (err, res) => {
+            if (err) throw err;
+            console.log(`--------------\nAdded ${response.newRole} to the database!\n--------------`);
+            loadMainPrompts();
+        });
+    });
 }
 
 function addDepartment () {
@@ -234,7 +259,7 @@ function deptArray () {
         if(err) throw err;
         departments = [];
         for (let i = 0; i < res.length; i++) {
-            departments.push(res[i].name);
+            departments.push(res[i].id + ' ' + res[i].name);
         }
     });
 }
