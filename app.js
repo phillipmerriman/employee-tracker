@@ -8,8 +8,7 @@ const connection = require('./db/connections');
 let mgrs = [];
 let roles = [];
 let departments = [];
-
-// console.log(db);
+let employees = [];
 
 init();
 
@@ -22,9 +21,12 @@ function init () {
 }
 
 function loadMainPrompts () {
+    //populate the arrays
+    employeeArray();
     mgrArray();
     rolesArray();
     deptArray();
+
     inquirer.prompt([
         {
             type: 'list',
@@ -49,8 +51,7 @@ function loadMainPrompts () {
                 'Exit'
             ]
         }
-    ]).then((response) => {
-        
+    ]).then((response) => {        
         switch (response.firstQuestion) {
 
             case 'View all employees':
@@ -61,8 +62,7 @@ function loadMainPrompts () {
                 viewAllManagers();
                 break;
             
-            case 'Add employee':
-                
+            case 'Add employee':                
                 addEmployee();
                 break;
 
@@ -89,8 +89,7 @@ function loadMainPrompts () {
             case 'Exit':
                 exit();
                 break;
-        }
-        
+        }        
     });
 }
 
@@ -107,8 +106,7 @@ function viewAllEmployees () {
 function viewAllManagers () {
 
     connection.query("SELECT first_name, last_name, role_id FROM employee WHERE manager_id IS null", (err, res) => {
-        if(err) throw err;
-        
+        if(err) throw err;        
         console.table(res);
         loadMainPrompts();
     });
@@ -152,16 +150,6 @@ function addEmployee () {
             message: "What is the employee's role?",
             name: "role",
             choices: roles,
-            // choices: [
-            //     "Sales Manager",
-            //     "Sales Associate",
-            //     "IT Manager",
-            //     "IT Associate",
-            //     "Senior Engineer",
-            //     "Junior Engineer",
-            //     "Project Manager",
-            //     "SEO Specialist"
-            // ]
         },
         {
             type: "list",
@@ -229,7 +217,38 @@ function addDepartment () {
 //----UPDATE section----//
 
 function updateEmployeeRole () {
-    // UPDATE
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Whose role would you like to update?",
+            choices: employees,
+            name: "employee"
+        },
+        {
+            type: "list",
+            message: `What is their new role?`,
+            choices: roles,
+            name: "newRole"
+        }
+    ])
+    // .then((response) => {
+    //     inquirer.prompt([
+    //         {
+    //             type: "list",
+    //             message: `What is ${response.employee.slice(2).trim()}'s new role?`,
+    //             choices: roles,
+    //             name: "newRole"
+    //         }
+    //     ]);
+    .then((response) => {
+        // UPDATE
+        // console.log("response: " + response);
+        connection.query(`UPDATE employee SET role_id = '${response.newRole.slice(0, 2).trim()}' WHERE employee.id = '${response.employee.slice(0, 2).trim()}'`, (e, r) => {
+            if (e) throw e;
+            console.log(`----------------------------\nUpdated ${response.employee.slice(2)}'s role to ${response.newRole.slice(2)}!\n----------------------------`);
+        loadMainPrompts();
+        });
+    });
 }
 
 //----end UPDATE section----//
@@ -273,6 +292,16 @@ function deptArray () {
         departments = [];
         for (let i = 0; i < res.length; i++) {
             departments.push(res[i].id + ' ' + res[i].name);
+        }
+    });
+}
+
+function employeeArray () {
+    connection.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        employees = [];
+        for (let i = 0; i < res.length; i++) {
+            employees.push(res[i].id + " " + res[i].first_name + " " + res[i].last_name);
         }
     });
 }

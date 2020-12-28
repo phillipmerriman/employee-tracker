@@ -29,3 +29,9 @@ CREATE TABLE employee (
     role_id INT,
     manager_id INT
 );
+
+-- UPDATE employee 
+--    SET role_id = 1
+--  WHERE employee.first_name = "Garth";
+
+SELECT * FROM employee;
