@@ -208,7 +208,20 @@ function addRole () {
 }
 
 function addDepartment () {
-    // CREATE
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'What is the name of the new department?',
+            name: 'newDeptName'
+        }
+    ]).then((response) => {
+        // CREATE
+        connection.query(`INSERT INTO department (name) VALUES ('${response.newDeptName}')`, (err, res) => {
+            if (err) throw err;
+            console.log(`--------------\nAdded ${response.newDeptName} to the database!\n--------------`);
+            loadMainPrompts();
+        });
+    });
 }
 
 //----end CREATE section----//
