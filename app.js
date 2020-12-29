@@ -44,7 +44,7 @@ function loadMainPrompts () {
                 'Remove role',
                 'View all departments',
                 'Add department',
-                // 'Remove department',
+                'Remove department',
                 // 'View utilized budget of department',
                 'Exit'
             ]
@@ -90,6 +90,10 @@ function loadMainPrompts () {
 
             case 'Add department':
                 addDepartment();
+                break;
+
+            case 'Remove department':
+                removeDepartment();
                 break;
 
             case 'Exit':
@@ -304,6 +308,24 @@ function removeRole () {
         connection.query(`DELETE FROM role WHERE id = ${response.exRole.slice(0, 2).trim()}`, (err, res) => {
             if (err) throw err;
             console.log(`----------------------------\nRemoved ${response.exRole.slice(2).trim()} from the database!\n----------------------------`);
+            loadMainPrompts();
+        })
+    })
+}
+
+function removeDepartment () {
+    inquirer.prompt([
+        {
+            type: 'list',
+            message: 'Which role are you removing?',
+            choices: departments,
+            name: 'exDepartment'
+        }
+    ]).then((response) => {
+        // DELETE
+        connection.query(`DELETE FROM role WHERE id = ${response.exDepartment.slice(0, 2).trim()}`, (err, res) => {
+            if (err) throw err;
+            console.log(`----------------------------\nRemoved ${response.exDepartment.slice(2).trim()} from the database!\n----------------------------`);
             loadMainPrompts();
         })
     })
