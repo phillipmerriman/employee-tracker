@@ -13,7 +13,7 @@ let employees = [];
 init();
 
 function init () {    
-    const logoText = logo({ name: "Employee Manager" }).render();
+    const logoText = logo({ name: "Employee Management System", font: "ANSI Shadow", fontSize: "20px", borderColor: "magenta", logoColor: "yellow", textColor: "green", description: 'mySQL Database'}).render();
     console.log(logoText);    
     loadMainPrompts();
 }
@@ -97,8 +97,22 @@ function loadMainPrompts () {
 
 //----READ section----//
 
+// function viewAllEmployees () {
+//     connection.query("SELECT * FROM employee", (err, res) => {
+//         if (err) throw err;
+//         console.table(res);
+//         loadMainPrompts();
+//     });
+// }
 function viewAllEmployees () {
-    connection.query("SELECT * FROM employee", (err, res) => {
+    connection.query(`SELECT employee.id AS 'ID#', CONCAT(employee.first_name, " ", employee.last_name) AS 'Employees',
+    role.id AS 'Role ID#', role.title AS 'Title', role.salary AS 'Salary', 
+  department_id AS 'Dept ID#', department.name AS 'Department',
+  CONCAT(e.first_name, ' ', e.last_name) AS 'Manager' 
+  FROM role 
+  LEFT JOIN employee ON employee.role_id = role.id 
+  INNER JOIN department ON department.id = role.department_id 
+  LEFT JOIN employee e ON employee.manager_id = e.id;`, (err, res) => {
         if (err) throw err;
         console.table(res);
         loadMainPrompts();
