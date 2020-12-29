@@ -12,11 +12,9 @@ let employees = [];
 
 init();
 
-function init () {
-    
+function init () {    
     const logoText = logo({ name: "Employee Manager" }).render();
-    console.log(logoText);
-    
+    console.log(logoText);    
     loadMainPrompts();
 }
 
@@ -38,7 +36,7 @@ function loadMainPrompts () {
                 // 'View all employees by department',
                 // 'View all employees by manager',
                 'Add employee',
-                // 'Remove employee',
+                'Remove employee',
                 'Update employee role',
                 // 'Update employee manager',
                 'View all roles',
@@ -64,6 +62,10 @@ function loadMainPrompts () {
             
             case 'Add employee':                
                 addEmployee();
+                break;
+
+            case 'Remove employee':                
+                removeEmployee();
                 break;
 
             case 'Update employee role':
@@ -242,11 +244,10 @@ function updateEmployeeRole () {
     //     ]);
     .then((response) => {
         // UPDATE
-        // console.log("response: " + response);
         connection.query(`UPDATE employee SET role_id = '${response.newRole.slice(0, 2).trim()}' WHERE employee.id = '${response.employee.slice(0, 2).trim()}'`, (e, r) => {
             if (e) throw e;
             console.log(`----------------------------\nUpdated ${response.employee.slice(2)}'s role to ${response.newRole.slice(2)}!\n----------------------------`);
-        loadMainPrompts();
+            loadMainPrompts();
         });
     });
 }
@@ -254,6 +255,24 @@ function updateEmployeeRole () {
 //----end UPDATE section----//
 
 //----DELETE section----//
+
+function removeEmployee () {
+    inquirer.prompt([
+        {
+            type: 'list',
+            message: 'Which employee are you removing?',
+            choices: employees,
+            name: 'exEmployee'
+        }
+    ]).then((response) => {
+        // DELETE
+        connection.query(`DELETE FROM employee WHERE id = ${response.exEmployee.slice(0, 2).trim()}`, (err, res) => {
+            if (err) throw err;
+            console.log(`----------------------------\nRemoved ${response.exEmployee.slice(2).trim()} from the database!\n----------------------------`);
+            loadMainPrompts();
+        });
+    });
+}
 
 //----end DELETE section----//
 
@@ -265,7 +284,6 @@ function exit () {
 
 //----make manager array----//
 function mgrArray () {
-
     connection.query("SELECT * FROM employee WHERE manager_id IS null", (err, res) => {
         if(err) throw err;
         mgrs = [];
@@ -286,7 +304,6 @@ function rolesArray () {
 }
 
 function deptArray () {
-
     connection.query("SELECT * FROM department", (err, res) => {
         if(err) throw err;
         departments = [];
