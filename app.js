@@ -105,27 +105,27 @@ function loadMainPrompts () {
 
 //----READ section----//
 
-// function viewAllEmployees () {
-//     connection.query("SELECT * FROM employee", (err, res) => {
-//         if (err) throw err;
-//         console.table(res);
-//         loadMainPrompts();
-//     });
-// }
 function viewAllEmployees () {
-    connection.query(`SELECT employee.id AS 'ID#', CONCAT(employee.first_name, " ", employee.last_name) AS 'Employees',
-    role.id AS 'Role ID#', role.title AS 'Title', role.salary AS 'Salary', 
-  department_id AS 'Dept ID#', department.name AS 'Department',
-  CONCAT(e.first_name, ' ', e.last_name) AS 'Manager' 
-  FROM role 
-  LEFT JOIN employee ON employee.role_id = role.id 
-  INNER JOIN department ON department.id = role.department_id 
-  LEFT JOIN employee e ON employee.manager_id = e.id;`, (err, res) => {
+    connection.query("SELECT * FROM employee", (err, res) => {
         if (err) throw err;
         console.table(res);
         loadMainPrompts();
     });
 }
+// function viewAllEmployees () {
+//     connection.query(`SELECT employee.id AS 'ID#', CONCAT(employee.first_name, " ", employee.last_name) AS 'Employees',
+//     role.id AS 'Role ID#', role.title AS 'Title', role.salary AS 'Salary', 
+//   department_id AS 'Dept ID#', department.name AS 'Department',
+//   CONCAT(e.first_name, ' ', e.last_name) AS 'Manager' 
+//   FROM role 
+//   LEFT JOIN employee ON employee.role_id = role.id 
+//   INNER JOIN department ON department.id = role.department_id 
+//   LEFT JOIN employee e ON employee.manager_id = e.id;`, (err, res) => {
+//         if (err) throw err;
+//         console.table(res);
+//         loadMainPrompts();
+//     });
+// }
 
 function viewAllManagers () {
     connection.query("SELECT first_name, last_name, role_id FROM employee WHERE manager_id IS null", (err, res) => {
@@ -317,18 +317,19 @@ function removeDepartment () {
     inquirer.prompt([
         {
             type: 'list',
-            message: 'Which role are you removing?',
+            message: 'Which department are you removing?',
             choices: departments,
             name: 'exDepartment'
         }
     ]).then((response) => {
         // DELETE
-        connection.query(`DELETE FROM role WHERE id = ${response.exDepartment.slice(0, 2).trim()}`, (err, res) => {
+        console.log(response.exDepartment.slice(0, 2).trim());
+        connection.query(`DELETE FROM department WHERE id = ${response.exDepartment.slice(0, 2).trim()}`, (err, res) => {
             if (err) throw err;
             console.log(`----------------------------\nRemoved ${response.exDepartment.slice(2).trim()} from the database!\n----------------------------`);
             loadMainPrompts();
-        })
-    })
+        });
+    });
 }
 
 //----end DELETE section----//
