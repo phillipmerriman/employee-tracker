@@ -41,7 +41,7 @@ function loadMainPrompts () {
                 // 'Update employee manager',
                 'View all roles',
                 'Add role',
-                // 'Remove role',
+                'Remove role',
                 'View all departments',
                 'Add department',
                 // 'Remove department',
@@ -78,6 +78,10 @@ function loadMainPrompts () {
 
             case 'Add role':
                 addRole();
+                break;
+
+            case 'Remove role':
+                removeRole();
                 break;
 
             case 'View all departments':
@@ -120,7 +124,6 @@ function viewAllEmployees () {
 }
 
 function viewAllManagers () {
-
     connection.query("SELECT first_name, last_name, role_id FROM employee WHERE manager_id IS null", (err, res) => {
         if(err) throw err;        
         console.table(res);
@@ -286,6 +289,24 @@ function removeEmployee () {
             loadMainPrompts();
         });
     });
+}
+
+function removeRole () {
+    inquirer.prompt([
+        {
+            type: 'list',
+            message: 'Which role are you removing?',
+            choices: roles,
+            name: 'exRole'
+        }
+    ]).then((response) => {
+        // DELETE
+        connection.query(`DELETE FROM role WHERE id = ${response.exRole.slice(0, 2).trim()}`, (err, res) => {
+            if (err) throw err;
+            console.log(`----------------------------\nRemoved ${response.exRole.slice(2).trim()} from the database!\n----------------------------`);
+            loadMainPrompts();
+        })
+    })
 }
 
 //----end DELETE section----//
