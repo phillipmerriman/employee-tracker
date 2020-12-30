@@ -96,6 +96,10 @@ function loadMainPrompts () {
                 removeDepartment();
                 break;
 
+            case 'View utilized budget of department':
+                departmentBudget();
+                break;
+
             case 'Exit':
                 exit();
                 break;
@@ -113,7 +117,8 @@ function loadMainPrompts () {
 //     });
 // }
 function viewAllEmployees () {
-    connection.query(`SELECT employee.id AS 'ID#', CONCAT(employee.first_name, " ", employee.last_name) AS 'Employees',
+    connection.query(`
+        SELECT employee.id AS 'ID#', CONCAT(employee.first_name, " ", employee.last_name) AS 'Employees',
         role.id AS 'Role ID#', role.title AS 'Title', role.salary AS 'Salary', 
         department_id AS 'Dept ID#', department.name AS 'Department',
         CONCAT(e.first_name, ' ', e.last_name) AS 'Manager' 
@@ -152,6 +157,17 @@ function viewAllDepartments () {
     });
 }
 
+// function departmentBudget () {
+//     connection.query(`
+//     SELECT department.name AS 'Department', role.salary AS 'Salary'
+//     FROM role 
+//     LEFT JOIN department ON department.id = role.department_id`, (err, res) => {
+//         if (err) throw err;
+//         console.table(res);
+//         loadMainPrompts();
+//     })
+// }
+
 //----end READ section----//
 
 
@@ -159,6 +175,12 @@ function viewAllDepartments () {
 
 function addEmployee () {
     inquirer.prompt([
+        {
+            type: "list",
+            message: "Will this employee be filling a management position?",
+            name: "mgr",
+            choices: ["Yes", "No"]
+        },
         {
             type: "input",
             message: "Enter employee's first name:",
@@ -179,15 +201,26 @@ function addEmployee () {
             type: "list",
             message: "Who is the manager?",
             name: "manager",
-            choices: mgrs
+            choices: mgrs,
+            when: (answer) => {
+                return answer.mgr === "No";
+            }
         }
     ]).then((response) => {
         // CREATE
-    connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${response.firstName}', '${response.lastName}', '${response.role.slice(0, 1)}', '${response.manager.slice(0, 1)}')`, (err, res) => {
-        if (err) throw err;
-        console.log(`----------------------------\nAdded ${response.firstName} ${response.lastName} to the database!\n----------------------------`);
-        loadMainPrompts();
-    });
+        if(response.manager === undefined) {
+            connection.query(`INSERT INTO employee (first_name, last_name, role_id) VALUES ('${response.firstName}', '${response.lastName}', '${response.role.slice(0, 1)}')`, (err, res) => {
+                if (err) throw err;
+                console.log(`----------------------------\nAdded ${response.firstName} ${response.lastName} to the database!\n----------------------------`);
+                loadMainPrompts();
+            });        
+        } else {
+            connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${response.firstName}', '${response.lastName}', '${response.role.slice(0, 1)}', '${response.manager.slice(0, 1)}')`, (err, res) => {
+                if (err) throw err;
+                console.log(`----------------------------\nAdded ${response.firstName} ${response.lastName} to the database!\n----------------------------`);
+                loadMainPrompts();
+            });
+        }
     });    
 }
 

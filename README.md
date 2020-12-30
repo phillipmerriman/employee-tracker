@@ -10,7 +10,7 @@ You need to set up your MySQL database before you can run the code:
         a. Open your MySQL Workbench and run cms-schema.sql to create the database and tables.
         b. Then run cms-seeds.sql to populate the database with some data. (Bonus points if you recognize some of the people in your database.)
     3. Now that your database is ready to be queried, open connections.js and replace the MySQL root password on line 13 with your MySQL root password.
-    4. Open a Git terminal. Type "node app.js".
+    4. Open a Git terminal. Type "node app.js" to invoke the application.
 
 ### Prerequisites
   * Git Bash terminal
