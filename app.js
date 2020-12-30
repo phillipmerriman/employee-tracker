@@ -114,14 +114,14 @@ function loadMainPrompts () {
 // }
 function viewAllEmployees () {
     connection.query(`SELECT employee.id AS 'ID#', CONCAT(employee.first_name, " ", employee.last_name) AS 'Employees',
-    role.id AS 'Role ID#', role.title AS 'Title', role.salary AS 'Salary', 
-  department_id AS 'Dept ID#', department.name AS 'Department',
-  CONCAT(e.first_name, ' ', e.last_name) AS 'Manager' 
-  FROM role 
-  LEFT JOIN employee ON employee.role_id = role.id 
-  INNER JOIN department ON department.id = role.department_id 
-  LEFT JOIN employee e ON employee.manager_id = e.id
-  WHERE employee.id IS NOT NULL;`, (err, res) => {
+        role.id AS 'Role ID#', role.title AS 'Title', role.salary AS 'Salary', 
+        department_id AS 'Dept ID#', department.name AS 'Department',
+        CONCAT(e.first_name, ' ', e.last_name) AS 'Manager' 
+        FROM role 
+        LEFT JOIN employee ON employee.role_id = role.id 
+        INNER JOIN department ON department.id = role.department_id 
+        LEFT JOIN employee e ON employee.manager_id = e.id
+        WHERE employee.id IS NOT NULL;`, (err, res) => {
         if (err) throw err;
         console.table(res);
         loadMainPrompts();
