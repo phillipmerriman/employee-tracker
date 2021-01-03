@@ -45,24 +45,24 @@ There is no automated test suite for this command line application. Instead, I r
     11. "Remove department"
     12. "Exit"
 
-You can see these tests run by viewing the provided GIF file 
-![employee-tracker.gif](employee-tracker.gif) 
+<!-- You can see these tests run by viewing the provided GIF file  -->
+<!-- ![employee-tracker.gif](employee-tracker.gif)  -->
 
 ## Deployment
 To deploy this on a live system, copy all of the files to your computer and follow the instructions in the "Installing" section followed by the "Getting Started" section. This is a command-line tool, not one that runs in the browser. There are no live pages to demonstrate. 
 
-You can see these tests run by viewing the provided animated GIF file 
-![employee-tracker.gif](employee-tracker.gif) 
+<!-- You can see these tests run by viewing the provided animated GIF file  -->
+<!-- ![employee-tracker.gif](employee-tracker.gif)  -->
 
 ## Built With
 * [Visual Studio Code](https://code.visualstudio.com/docs/setup/setup-overview)
-* [Visual Studio Code Extension "Open in Browser"] 
+* [Visual Studio Code Extension "Live Server"] 
     * Open VS Code.
-    * Open the extensions pane and search for open in browser.
-    * Select the version written by TechER and click Install.
+    * Open the extensions pane and search for Live Server.
+    * Select the version written by Ritwick Dey and click Install.
 * [Git Terminal](https://git-scm.com/downloads)
 * [Node](https://nodejs.org/en/download/)
-     * [inqiurer](https://www.npmjs.com/package/inquirer)
+     * [inquirer](https://www.npmjs.com/package/inquirer)
      * [mysql](https://www.npmjs.com/package/mysql)
      * [console.table](https://www.npmjs.com/package/console.table)
      * [asciiart-logo](https://www.npmjs.com/package/asciiart-logo)
@@ -90,4 +90,3 @@ Thanks to the following:
 * Git Terminal (https://git-scm.com/downloads)
 * Demetri Dillard (https://github.com/Meechlouch) for helping with the MySQL joins on the view all employees function!
 * Screencastify (https://www.screencastify.com/) for making mp4 screen capture videos.
-* ConvertIO (https://convertio.co/) for converting my MP4 to an animated GIF.
