@@ -13,7 +13,7 @@ let employees = [];
 init();
 
 function init () {    
-    const logoText = logo({ name: "Employee Management System", font: "ANSI Shadow", fontSize: "20px", borderColor: "magenta", logoColor: "yellow", textColor: "green", description: 'mySQL Database'}).render();
+    const logoText = logo({ name: "Employee Management System c.l.a.", font: "ANSI Shadow", fontSize: "20px", borderColor: "magenta", logoColor: "yellow", textColor: "skyblue", description: 'MySQL Database'}).render();
     console.log(logoText);    
     loadMainPrompts();
 }
@@ -109,6 +109,8 @@ function loadMainPrompts () {
 
 //----READ section----//
 
+// without using join
+
 // function viewAllEmployees () {
 //     connection.query("SELECT * FROM employee", (err, res) => {
 //         if (err) throw err;
@@ -116,6 +118,8 @@ function loadMainPrompts () {
 //         loadMainPrompts();
 //     });
 // }
+
+// using join
 function viewAllEmployees () {
     connection.query(`
         SELECT employee.id AS 'ID#', CONCAT(employee.first_name, " ", employee.last_name) AS 'Employees',
@@ -209,13 +213,13 @@ function addEmployee () {
     ]).then((response) => {
         // CREATE
         if(response.manager === undefined) {
-            connection.query(`INSERT INTO employee (first_name, last_name, role_id) VALUES ('${response.firstName}', '${response.lastName}', '${response.role.slice(0, 1)}')`, (err, res) => {
+            connection.query(`INSERT INTO employee (first_name, last_name, role_id) VALUES ('${response.firstName}', '${response.lastName}', '${response.role.slice(0, 2)}')`, (err, res) => {
                 if (err) throw err;
                 console.log(`----------------------------\nAdded ${response.firstName} ${response.lastName} to the database!\n----------------------------`);
                 loadMainPrompts();
             });        
         } else {
-            connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${response.firstName}', '${response.lastName}', '${response.role.slice(0, 1)}', '${response.manager.slice(0, 1)}')`, (err, res) => {
+            connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${response.firstName}', '${response.lastName}', '${response.role.slice(0, 2)}', '${response.manager.slice(0, 2)}')`, (err, res) => {
                 if (err) throw err;
                 console.log(`----------------------------\nAdded ${response.firstName} ${response.lastName} to the database!\n----------------------------`);
                 loadMainPrompts();
@@ -287,17 +291,7 @@ function updateEmployeeRole () {
             choices: roles,
             name: "newRole"
         }
-    ])
-    // .then((response) => {
-    //     inquirer.prompt([
-    //         {
-    //             type: "list",
-    //             message: `What is ${response.employee.slice(2).trim()}'s new role?`,
-    //             choices: roles,
-    //             name: "newRole"
-    //         }
-    //     ]);
-    .then((response) => {
+    ]).then((response) => {
         // UPDATE
         connection.query(`UPDATE employee SET role_id = '${response.newRole.slice(0, 2).trim()}' WHERE employee.id = '${response.employee.slice(0, 2).trim()}'`, (e, r) => {
             if (e) throw e;
